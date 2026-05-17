@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secure Online Banking Platform">
+    <meta name="theme-color" content="#1a2332">
+    <title>SecureBank - Online Banking</title>
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login View -->
+        <section id="login-view" class="auth-view active">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1>SecureBank</h1>
+                        <p>Secure Online Banking</p>
+                    </div>
+                    
+                    <form id="login-form" class="auth-form" method="post">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="login-email" 
+                                name="email" 
+                                placeholder="Enter your email"
+                                required 
+                                autofocus
+                            >
+                            <span class="error-message" id="login-email-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="login-password" 
+                                name="password" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <span class="error-message" id="login-password-error"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>Sign In</span>
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                        
+                        <div class="form-error" id="login-error" style="display: none;"></div>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="#" onclick="switchView('register')">Register here</a></p>
+                        <p><a href="#" onclick="switchView('forgot-password')">Forgot your password?</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Register View -->
+        <section id="register-view" class="auth-view">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1>Create Account</h1>
+                        <p>Join SecureBank Today</p>
+                    </div>
+                    
+                    <form id="register-form" class="auth-form" method="post">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reg-first-name">First Name</label>
+                                <input 
+                                    type="text" 
+                                    id="reg-first-name" 
+                                    name="first_name" 
+                                    placeholder="First name"
+                                    required
+                                >
+                                <span class="error-message" id="reg-first-name-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reg-last-name">Last Name</label>
+                                <input 
+                                    type="text" 
+                                    id="reg-last-name" 
+                                    name="last_name" 
+                                    placeholder="Last name"
+                                    required
+                                >
+                                <span class="error-message" id="reg-last-name-error"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="reg-email" 
+                                name="email" 
+                                placeholder="Enter your email"
+                                required
+                            >
+                            <span class="error-message" id="reg-email-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-dob">Date of Birth</label>
+                            <input 
+                                type="date" 
+                                id="reg-dob" 
+                                name="date_of_birth" 
+                                required
+                            >
+                            <span class="error-message" id="reg-dob-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-phone">Phone Number</label>
+                            <input 
+                                type="tel" 
+                                id="reg-phone" 
+                                name="phone_number" 
+                                placeholder="(123) 456-7890"
+                            >
+                            <span class="error-message" id="reg-phone-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="reg-password" 
+                                name="password" 
+                                placeholder="Minimum 12 characters"
+                                required
+                            >
+                            <div class="password-strength" id="password-strength"></div>
+                            <span class="error-message" id="reg-password-error"></span>
+                            <small class="form-hint">
+                                Password must contain uppercase, lowercase, numbers, and special characters
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password-confirm">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                id="reg-password-confirm" 
+                                name="password_confirm" 
+                                placeholder="Confirm your password"
+                                required
+                            >
+                            <span class="error-message" id="reg-password-confirm-error"></span>
+                        </div>
+                        
+                        <div class="form-group checkbox">
+                            <input 
+                                type="checkbox" 
+                                id="terms" 
+                                name="terms" 
+                                required
+                            >
+                            <label for="terms">I agree to the Terms of Service and Privacy Policy</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>Create Account</span>
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                        
+                        <div class="form-error" id="register-error" style="display: none;"></div>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="#" onclick="switchView('login')">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Dashboard View -->
+        <section id="dashboard-view" class="main-view">
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <h2>SecureBank</h2>
+                </div>
+                <ul class="navbar-menu">
+                    <li><a href="#" onclick="loadDashboard()">Dashboard</a></li>
+                    <li><a href="#" onclick="switchView('transactions')">Transactions</a></li>
+                    <li><a href="#" onclick="switchView('profile')">Profile</a></li>
+                    <li><a href="#" onclick="logout()" class="btn-logout">Logout</a></li>
+                </ul>
+            </nav>
+            
+            <div class="container">
+                <header class="dashboard-header">
+                    <h1>Welcome, <span id="user-name">User</span>!</h1>
+                    <p>Here's your account overview</p>
+                </header>
+                
+                <!-- Accounts Summary -->
+                <section class="accounts-section">
+                    <h2>Your Accounts</h2>
+                    <div id="accounts-grid" class="grid grid-3">
+                        <div class="account-card loading">
+                            <p>Loading accounts...</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Quick Actions -->
+                <section class="actions-section">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-action" onclick="switchView('deposit')">
+                            <span class="icon">➕</span>
+                            <span>Deposit</span>
+                        </button>
+                        <button class="btn btn-action" onclick="switchView('withdraw')">
+                            <span class="icon">➖</span>
+                            <span>Withdraw</span>
+                        </button>
+                        <button class="btn btn-action" onclick="switchView('transfer')">
+                            <span class="icon">↔️</span>
+                            <span>Transfer</span>
+                        </button>
+                        <button class="btn btn-action" onclick="switchView('beneficiaries')">
+                            <span class="icon">👥</span>
+                            <span>Beneficiaries</span>
+                        </button>
+                    </div>
+                </section>
+                
+                <!-- Recent Transactions -->
+                <section class="transactions-section">
+                    <h2>Recent Transactions</h2>
+                    <div id="recent-transactions" class="transactions-list">
+                        <p class="loading">Loading transactions...</p>
+                    </div>
+                    <div class="section-footer">
+                        <a href="#" onclick="switchView('transactions')" class="link">View all transactions →</a>
+                    </div>
+                </section>
+            </div>
+        </section>
+        
+        <!-- Transactions View -->
+        <section id="transactions-view" class="main-view">
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                </div>
+                <div class="navbar-title">Transaction History</div>
+            </nav>
+            
+            <div class="container">
+                <div class="filter-section">
+                    <select id="account-filter" class="form-control" onchange="loadTransactionHistory()">
+                        <option value="">All Accounts</option>
+                    </select>
+                </div>
+                
+                <div id="transactions-container" class="transactions-list">
+                    <p class="loading">Loading transactions...</p>
+                </div>
+                
+                <div id="pagination" class="pagination" style="display: none;"></div>
+            </div>
+        </section>
+        
+        <!-- Deposit View -->
+        <section id="deposit-view" class="transaction-view">
+            <nav class="navbar">
+                <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                <div class="navbar-title">Deposit Funds</div>
+            </nav>
+            
+            <div class="container form-container">
+                <form id="deposit-form" class="transaction-form">
+                    <div class="form-group">
+                        <label for="deposit-account">Select Account</label>
+                        <select id="deposit-account" name="account_id" required>
+                            <option value="">Choose an account...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deposit-amount">Deposit Amount</label>
+                        <div class="input-group">
+                            <span class="currency">$</span>
+                            <input 
+                                type="number" 
+                                id="deposit-amount" 
+                                name="amount" 
+                                placeholder="0.00"
+                                min="0.01"
+                                max="999999.99"
+                                step="0.01"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deposit-description">Description (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="deposit-description" 
+                            name="description" 
+                            placeholder="e.g., Paycheck deposit"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Deposit Funds</button>
+                    <div class="form-error" id="deposit-error" style="display: none;"></div>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Withdraw View -->
+        <section id="withdraw-view" class="transaction-view">
+            <nav class="navbar">
+                <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                <div class="navbar-title">Withdraw Funds</div>
+            </nav>
+            
+            <div class="container form-container">
+                <form id="withdraw-form" class="transaction-form">
+                    <div class="form-group">
+                        <label for="withdraw-account">Select Account</label>
+                        <select id="withdraw-account" name="account_id" required>
+                            <option value="">Choose an account...</option>
+                        </select>
+                        <span class="account-balance" id="withdraw-balance"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-amount">Withdrawal Amount</label>
+                        <div class="input-group">
+                            <span class="currency">$</span>
+                            <input 
+                                type="number" 
+                                id="withdraw-amount" 
+                                name="amount" 
+                                placeholder="0.00"
+                                min="0.01"
+                                max="999999.99"
+                                step="0.01"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-description">Description (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="withdraw-description" 
+                            name="description" 
+                            placeholder="e.g., ATM withdrawal"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Withdraw Funds</button>
+                    <div class="form-error" id="withdraw-error" style="display: none;"></div>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Transfer View -->
+        <section id="transfer-view" class="transaction-view">
+            <nav class="navbar">
+                <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                <div class="navbar-title">Transfer Funds</div>
+            </nav>
+            
+            <div class="container form-container">
+                <form id="transfer-form" class="transaction-form">
+                    <div class="form-group">
+                        <label for="transfer-from">From Account</label>
+                        <select id="transfer-from" name="from_account_id" required onchange="updateTransferBalance()">
+                            <option value="">Choose an account...</option>
+                        </select>
+                        <span class="account-balance" id="transfer-balance"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transfer-to">To Account</label>
+                        <select id="transfer-to" name="to_account_id" required>
+                            <option value="">Choose destination...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transfer-amount">Transfer Amount</label>
+                        <div class="input-group">
+                            <span class="currency">$</span>
+                            <input 
+                                type="number" 
+                                id="transfer-amount" 
+                                name="amount" 
+                                placeholder="0.00"
+                                min="0.01"
+                                max="999999.99"
+                                step="0.01"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transfer-description">Description (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="transfer-description" 
+                            name="description" 
+                            placeholder="e.g., Payment to John"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Transfer Funds</button>
+                    <div class="form-error" id="transfer-error" style="display: none;"></div>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Profile View -->
+        <section id="profile-view" class="main-view">
+            <nav class="navbar">
+                <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                <div class="navbar-title">My Profile</div>
+            </nav>
+            
+            <div class="container">
+                <div class="profile-section">
+                    <h2>Personal Information</h2>
+                    <form id="profile-form" class="form-group">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-first-name">First Name</label>
+                                <input type="text" id="profile-first-name" name="first_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-last-name">Last Name</label>
+                                <input type="text" id="profile-last-name" name="last_name">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="profile-email">Email (Cannot be changed)</label>
+                            <input type="email" id="profile-email" disabled>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="profile-phone">Phone Number</label>
+                            <input type="tel" id="profile-phone" name="phone_number">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-city">City</label>
+                                <input type="text" id="profile-city" name="city">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-state">State</label>
+                                <input type="text" id="profile-state" name="state">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <div class="form-error" id="profile-error" style="display: none;"></div>
+                    </form>
+                </div>
+                
+                <div class="security-section">
+                    <h2>Security</h2>
+                    <button class="btn btn-secondary" onclick="switchView('change-password')">
+                        Change Password
+                    </button>
+                </div>
+                
+                <div class="danger-section">
+                    <h2>Danger Zone</h2>
+                    <button class="btn btn-danger" onclick="confirmDeactivate()">
+                        Deactivate Account
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Scripts -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/validation.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/transactions.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

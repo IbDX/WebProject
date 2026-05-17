@@ -1,0 +1,438 @@
+/**
+ * Responsive Design - Mobile First Approach
+ */
+
+/* Tablet (768px and up) */
+@media (max-width: 1024px) {
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .navbar-menu {
+        gap: var(--spacing-md);
+    }
+    
+    .container {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+}
+
+/* Mobile (576px and down) */
+@media (max-width: 768px) {
+    :root {
+        --font-size-base: 14px;
+        --spacing-lg: 1rem;
+        --spacing-xl: 1.5rem;
+    }
+    
+    /* Hide on mobile */
+    .navbar-menu {
+        display: none;
+    }
+    
+    /* Buttons */
+    .btn {
+        padding: var(--spacing-md) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+    
+    .btn-block {
+        width: 100%;
+    }
+    
+    /* Forms */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Auth */
+    .auth-container {
+        max-width: 100%;
+        padding: var(--spacing-lg);
+    }
+    
+    .auth-card {
+        padding: var(--spacing-lg);
+    }
+    
+    .auth-header h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    /* Main View */
+    .container {
+        padding: var(--spacing-lg) var(--spacing-md);
+        max-width: 100%;
+    }
+    
+    /* Dashboard */
+    .dashboard-header h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    /* Grid */
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    
+    .btn-action {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+    
+    .btn-action .icon {
+        font-size: var(--font-size-lg);
+    }
+    
+    /* Account Cards */
+    .account-card {
+        padding: var(--spacing-md);
+    }
+    
+    .account-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    /* Transactions */
+    .transaction-item {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+    
+    .transaction-item.detailed {
+        flex-wrap: wrap;
+    }
+    
+    .transaction-amount {
+        align-self: flex-end;
+    }
+    
+    .transaction-amount.detailed {
+        order: -1;
+        align-self: flex-start;
+    }
+    
+    /* Navbar */
+    .navbar {
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+    
+    .navbar-brand h2 {
+        font-size: var(--font-size-lg);
+    }
+    
+    .navbar-title {
+        width: 100%;
+        order: 2;
+        font-size: var(--font-size-base);
+    }
+    
+    .btn-back {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-base);
+    }
+    
+    /* Toast */
+    .toast {
+        min-width: calc(100% - var(--spacing-2xl));
+        max-width: calc(100% - var(--spacing-2xl));
+    }
+    
+    .toast-container {
+        left: var(--spacing-lg);
+        right: var(--spacing-lg);
+    }
+    
+    /* Pagination */
+    .pagination {
+        gap: var(--spacing-sm);
+    }
+    
+    .pagination .btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Filter */
+    .filter-section {
+        flex-direction: column;
+    }
+    
+    .filter-section select {
+        max-width: 100%;
+    }
+}
+
+/* Small Mobile (320px and up) */
+@media (max-width: 480px) {
+    :root {
+        --font-size-base: 13px;
+        --spacing-md: 0.75rem;
+        --spacing-lg: 1rem;
+    }
+    
+    h1 { font-size: var(--font-size-2xl); }
+    h2 { font-size: var(--font-size-xl); }
+    h3 { font-size: var(--font-size-lg); }
+    
+    /* Buttons */
+    .btn {
+        padding: var(--spacing-md) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Forms */
+    label {
+        font-size: var(--font-size-xs);
+    }
+    
+    input,
+    select,
+    textarea {
+        padding: var(--spacing-md) var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    .form-hint {
+        font-size: var(--font-size-xs);
+    }
+    
+    .error-message {
+        font-size: var(--font-size-xs);
+    }
+    
+    /* Auth */
+    .auth-container {
+        padding: var(--spacing-md);
+    }
+    
+    .auth-card {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .auth-header {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .auth-header h1 {
+        font-size: var(--font-size-xl);
+    }
+    
+    /* Main */
+    .container {
+        padding: var(--spacing-lg) var(--spacing-sm);
+    }
+    
+    .form-container {
+        max-width: 100%;
+    }
+    
+    /* Grid */
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Account Cards */
+    .account-card {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+    
+    .account-balance {
+        font-size: var(--font-size-xl);
+    }
+    
+    /* Transactions */
+    .transaction-item {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    
+    .transaction-type {
+        font-size: var(--font-size-base);
+    }
+    
+    .transaction-date {
+        font-size: var(--font-size-xs);
+    }
+    
+    .transaction-icon {
+        width: 40px;
+        height: 40px;
+        font-size: var(--font-size-lg);
+    }
+    
+    .transaction-amount {
+        font-size: var(--font-size-base);
+        min-width: 70px;
+    }
+    
+    /* Navbar */
+    .navbar {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    
+    .navbar-brand h2 {
+        font-size: var(--font-size-base);
+    }
+    
+    /* Profile */
+    .profile-section,
+    .security-section,
+    .danger-section {
+        padding: var(--spacing-md);
+    }
+    
+    .profile-section h2,
+    .security-section h2,
+    .danger-section h2 {
+        font-size: var(--font-size-lg);
+    }
+    
+    /* Toast */
+    .toast {
+        min-width: 100vw;
+        max-width: calc(100vw - var(--spacing-md));
+        border-radius: 0;
+        margin-left: calc(var(--spacing-md) * -1);
+        margin-right: calc(var(--spacing-md) * -1);
+    }
+    
+    .toast-container {
+        left: 0;
+        right: 0;
+        top: 0;
+    }
+}
+
+/* Landscape Orientation (any width in landscape) */
+@media (orientation: landscape) and (max-height: 600px) {
+    .auth-card {
+        padding: var(--spacing-md);
+    }
+    
+    .auth-header {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .auth-form {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .dashboard-header {
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+/* High DPI Displays */
+@media (min-resolution: 2dppx) {
+    .shadow-md,
+    .shadow-lg {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background-color: white;
+    }
+    
+    .navbar,
+    .action-buttons,
+    .auth-view {
+        display: none;
+    }
+    
+    .main-view {
+        box-shadow: none;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        border: 1px solid black;
+    }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark Mode Support (optional) */
+@media (prefers-color-scheme: dark) {
+    /* Can be extended for dark mode support */
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.container-full {
+    max-width: 100%;
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.mt-md {
+    margin-top: var(--spacing-md);
+}
+
+.mb-md {
+    margin-bottom: var(--spacing-md);
+}
+
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
