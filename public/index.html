@@ -6,6 +6,26 @@
     <meta name="description" content="Secure Online Banking Platform">
     <meta name="theme-color" content="#1a2332">
     <title>SecureBank - Online Banking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            var key = 'theme';
+            var dark = 'dark';
+            var light = 'light';
+            var theme = localStorage.getItem(key);
+            if (theme !== dark && theme !== light) {
+                theme = dark;
+                localStorage.setItem(key, theme);
+            }
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle(dark, theme === dark);
+            document.documentElement.style.colorScheme = theme;
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === dark ? '#0b0f13' : '#1a2332');
+        })();
+    </script>
     
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
@@ -502,6 +522,7 @@
     <div id="toast-container" class="toast-container"></div>
     
     <!-- Scripts -->
+    <script src="assets/js/theme.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/validation.js"></script>
     <script src="assets/js/api.js"></script>

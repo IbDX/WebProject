@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CRUD Demo - Demo Items</title>
+    <script>
+        (function () {
+            var key = 'theme';
+            var dark = 'dark';
+            var light = 'light';
+            var theme = localStorage.getItem(key);
+            if (theme !== dark && theme !== light) {
+                theme = dark;
+                localStorage.setItem(key, theme);
+            }
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.classList.toggle(dark, theme === dark);
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        body { padding: var(--spacing-lg); }
+        .demo-container {
+            max-width: 860px;
+            margin: 24px auto;
+            padding: var(--spacing-2xl);
+            background: var(--color-surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--color-border);
+            animation: fadeUp 360ms var(--ease-standard) both;
+        }
+        .demo-container h1 { margin-bottom: var(--spacing-sm); }
+        .demo-container p { color: var(--color-text-secondary); }
+        .demo-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: var(--spacing-lg);
+            margin-bottom: 18px;
+        }
+        .demo-actions .btn { min-width: 160px; }
+        .results { margin-top: 16px; }
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #f7f9fc;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            min-height: 120px;
+        }
+        .form-row { margin-bottom: 14px; }
+        .form-row label { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="demo-container card">
+        <h1>CRUD Demo (demo_items)</h1>
+        <p>This page demonstrates client-side HTML/CSS, usage of <code>$_POST</code>, and client-server CRUD operations (insert/select/update/delete). Use the form below to submit via a normal POST, or use the AJAX buttons.</p>
+
+        <form id="crud-form" method="post" action="crud_handler.php">
+            <input type="hidden" name="action" id="form-action" value="insert">
+
+            <div class="form-row">
+                <label for="item-id">ID (for select/update/delete)</label>
+                <input type="number" id="item-id" name="id" placeholder="Leave blank for insert" />
+            </div>
+
+            <div class="form-row">
+                <label for="item-name">Name</label>
+                <input type="text" id="item-name" name="name" required />
+            </div>
+
+            <div class="form-row">
+                <label for="item-email">Email</label>
+                <input type="email" id="item-email" name="email" required />
+            </div>
+
+            <div class="demo-actions">
+                <button type="submit" onclick="document.getElementById('form-action').value='insert'" class="btn">Insert (form POST)</button>
+                <button type="submit" onclick="document.getElementById('form-action').value='update'" class="btn">Update (form POST)</button>
+                <button type="submit" onclick="document.getElementById('form-action').value='delete'" class="btn btn-danger">Delete (form POST)</button>
+                <button type="button" id="btn-list" class="btn">List All (AJAX)</button>
+                <button type="button" id="btn-get" class="btn">Get By ID (AJAX)</button>
+            </div>
+        </form>
+
+        <div class="results">
+            <h3>Result</h3>
+            <pre id="result-output">No action yet.</pre>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/crud.js"></script>
+</body>
+</html>

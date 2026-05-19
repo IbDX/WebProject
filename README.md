@@ -7,6 +7,7 @@ A complete, enterprise-grade secure banking platform built with vanilla HTML5, C
 ## 📋 Table of Contents
 
 - [Features](#features)
+- [Demo & CRUD](#demo--crud)
 - [Architecture](#architecture)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -45,6 +46,75 @@ A complete, enterprise-grade secure banking platform built with vanilla HTML5, C
 - ✅ **Real-time Notifications** - Toast alerts for all actions
 - ✅ **Form Validation** - Client and server-side validation
 - ✅ **Accessible UI** - WCAG compliant design
+
+---
+
+## 📝 Demo & CRUD
+
+### Interactive CRUD Demo
+The project includes a standalone CRUD demo page that demonstrates core web development concepts:
+
+**Visit:** `http://localhost/Webproject2/public/crud_demo.html`
+
+**What it demonstrates:**
+- **Client-side HTML & CSS** - Interactive form-based UI
+- **Server-side `$_POST`** - Form submission handling with PHP superglobals
+- **REST API with JSON** - AJAX client-server communication
+- **CRUD Operations** - Create (INSERT), Read (SELECT), Update (UPDATE), Delete (DELETE)
+- **Database Integration** - Real MySQL table (`demo_items`)
+
+**Features:**
+- Insert new demo items with name and email
+- Select/search items by ID
+- Update existing items
+- Delete items
+- List all items via AJAX
+- Both form POST (traditional) and JSON API (AJAX) methods supported
+
+**Files involved:**
+- `public/crud_demo.html` - Interactive demo page with form
+- `public/crud_handler.php` - PHP backend handling `$_POST` and JSON API (`?api=1`)
+- `assets/js/crud.js` - Client-side AJAX helpers
+- `database_schema.sql` - Includes `demo_items` table definition
+
+**Quick Start:**
+```bash
+# 1. Import the database schema (includes demo_items table)
+mysql -u root -p banking_app_db < database_schema.sql
+
+# 2. Open in browser
+http://localhost/Webproject2/public/crud_demo.html
+
+# 3. Try the form:
+#    - Fill in Name and Email
+#    - Click "Insert (form POST)" to submit via traditional form
+#    - Or click "List All (AJAX)" to fetch via JSON API
+#    - View results in the output panel
+```
+
+**API Examples:**
+```bash
+# List all items
+curl "http://localhost/Webproject2/public/crud_handler.php?api=1"
+
+# Get single item
+curl "http://localhost/Webproject2/public/crud_handler.php?api=1&id=1"
+
+# Insert new item (requires JSON)
+curl -X POST http://localhost/Webproject2/public/crud_handler.php?api=1 \
+  -H "Content-Type: application/json" \
+  -d '{"action":"insert","name":"John Doe","email":"john@example.com"}'
+
+# Update item
+curl -X POST http://localhost/Webproject2/public/crud_handler.php?api=1 \
+  -H "Content-Type: application/json" \
+  -d '{"action":"update","id":1,"name":"Jane Doe","email":"jane@example.com"}'
+
+# Delete item
+curl -X POST http://localhost/Webproject2/public/crud_handler.php?api=1 \
+  -H "Content-Type: application/json" \
+  -d '{"action":"delete","id":1}'
+```
 
 ---
 
@@ -205,6 +275,7 @@ SOURCE database_schema.sql;
 4. **sessions** - Session management
 5. **audit_logs** - Compliance logging
 6. **beneficiaries** - Transfer recipients
+7. **demo_items** - Demo CRUD table for testing (name, email)
 
 ### Database Optimization
 ```sql
@@ -484,7 +555,9 @@ securebank/
 │       ├── Response.php          # Response formatting
 │       └── AuditLogger.php       # Audit logging
 ├── public/
-│   └── index.html                # Single-page application
+│   ├── index.html                # Single-page application
+│   ├── crud_demo.html            # Interactive CRUD demo page
+│   └── crud_handler.php          # CRUD backend handler (POST & JSON API)
 ├── views/
 │   └── (template structure documented in PROJECT_STRUCTURE.md)
 ├── assets/
@@ -498,8 +571,9 @@ securebank/
 │       ├── auth.js               # Authentication handlers
 │       ├── transactions.js       # Transaction handlers
 │       ├── validation.js         # Form validation
-│       └── utils.js              # Utility functions
-├── database_schema.sql           # MySQL database schema
+│       ├── utils.js              # Utility functions
+│       └── crud.js               # CRUD demo AJAX helpers
+├── database_schema.sql           # MySQL database schema (includes demo_items table)
 ├── .htaccess                     # Apache configuration
 ├── index.php                     # Application entry point
 └── README.md                     # This file
