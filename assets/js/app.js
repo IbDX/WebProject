@@ -181,7 +181,7 @@ function setupBeneficiariesView() {
         const beneficiariesHtml = `
             <section id="beneficiaries-view" class="main-view">
                 <nav class="navbar">
-                    <button onclick="switchView('dashboard')" class="btn-back">← Back</button>
+                    <button onclick="switchView('dashboard')" class="btn-back">Back</button>
                     <div class="navbar-title">Manage Beneficiaries</div>
                 </nav>
                 

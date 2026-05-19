@@ -219,7 +219,7 @@ class AuthMiddleware {
         }
         
         if (self::$currentUser === null) {
-            $query = "SELECT user_id, email, first_name, last_name, phone_number, status FROM users WHERE user_id = ?";
+            $query = "SELECT user_id, email, first_name, last_name, phone_number, address, city, state, zip_code, country, date_of_birth, status FROM users WHERE user_id = ?";
             self::$currentUser = fetchOne($query, [$_SESSION['user_id']]);
         }
         
