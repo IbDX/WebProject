@@ -2,16 +2,7 @@
  * API Communication Layer
  */
 
-const APP_BASE = (() => {
-    const path = window.location.pathname
-        .replace(/\/public(?:\/index\.html)?$/, '')
-        .replace(/\/index\.php$/, '')
-        .replace(/\/$/, '');
-
-    return path || '';
-})();
-
-const API_BASE = `${APP_BASE}/index.php/api`;
+const API_BASE = '/Webproject2_DB/index.php/api';
 
 class API {
     
@@ -28,6 +19,8 @@ class API {
         }
         
         const config = {
+            credentials: 'include',
+            mode: 'cors',
             ...options,
             headers: { ...headers, ...options.headers }
         };

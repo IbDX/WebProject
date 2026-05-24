@@ -45,7 +45,7 @@ function setupLoginForm() {
             if (response.success) {
                 // Store auth data
                 setAuthToken(response.data.token);
-                setUserData(response.data);
+                setUserData(response.data.user || response.data);
                 
                 showToast('Login successful!', 'success');
                 

@@ -1,5 +1,6 @@
 // Simple AJAX helpers for the CRUD demo (uses JSON API endpoint)
 (function () {
+    const CRUD_BASE = window.__CRUD_BASE__ || '/Webproject2_DB/public/crud_handler.php';
     const out = document.getElementById('result-output');
     const form = document.getElementById('crud-form');
 
@@ -10,7 +11,7 @@
     async function listAll() {
         show('Loading...');
         try {
-            const res = await fetch('crud_handler.php?api=1');
+            const res = await fetch(`${CRUD_BASE}?api=1`);
             const json = await res.json();
             show(json);
         } catch (e) {
@@ -23,7 +24,7 @@
         if (!id) return show('Please enter an ID');
         show('Loading...');
         try {
-            const res = await fetch(`crud_handler.php?api=1&id=${encodeURIComponent(id)}`);
+            const res = await fetch(`${CRUD_BASE}?api=1&id=${encodeURIComponent(id)}`);
             const json = await res.json();
             show(json);
         } catch (e) {
@@ -51,7 +52,7 @@
         show('Working...');
         try {
             const payload = { action, id, name, email };
-            const res = await fetch('crud_handler.php?api=1', {
+            const res = await fetch(`${CRUD_BASE}?api=1`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
