@@ -2,7 +2,7 @@
  * API Communication Layer
  */
 
-const API_BASE = (window.__API_BASE__ || 'https://earpiece-fondly-partake.ngrok-free.dev/index.php/api').replace(/\/$/, '');
+const API_BASE = (window.__API_BASE__ || 'https://scure-bank.42web.io/index.php/api').replace(/\/$/, '');
 
 class API {
     
