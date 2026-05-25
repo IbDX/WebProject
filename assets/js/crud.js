@@ -1,6 +1,6 @@
 // Simple AJAX helpers for the CRUD demo (uses JSON API endpoint)
 (function () {
-    const CRUD_BASE = window.__CRUD_BASE__ || 'https://scure-bank.42web.io/public/crud_handler.php';
+    const CRUD_BASE = window.__CRUD_BASE__ || 'https://subjects-sacramento-upgrading-hopkins.trycloudflare.com/public/crud_handler.php';
     const out = document.getElementById('result-output');
     const form = document.getElementById('crud-form');
 
