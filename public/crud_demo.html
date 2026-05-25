@@ -61,7 +61,7 @@
         <h1>CRUD Demo (demo_items)</h1>
         <p>This page demonstrates client-side HTML/CSS, usage of <code>$_POST</code>, and client-server CRUD operations (insert/select/update/delete). Use the form below to submit via a normal POST, or use the AJAX buttons.</p>
 
-        <form id="crud-form" method="post" action="/Webproject2_DB/public/crud_handler.php">
+        <form id="crud-form" method="post" action="/public/crud_handler.php">
             <input type="hidden" name="action" id="form-action" value="insert">
 
             <div class="form-row">
@@ -96,7 +96,7 @@
 
     <script>
         (function () {
-            var base = (window.__CRUD_BASE__ || '/Webproject2_DB/public/crud_handler.php').replace(/\/$/, '');
+            var base = (window.__CRUD_BASE__ || '/public/crud_handler.php').replace(/\/$/, '');
             var form = document.getElementById('crud-form');
             if (form) {
                 form.action = base;

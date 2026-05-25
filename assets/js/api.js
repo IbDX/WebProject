@@ -2,7 +2,7 @@
  * API Communication Layer
  */
 
-const API_BASE = (window.__API_BASE__ || 'https://subjects-sacramento-upgrading-hopkins.trycloudflare.com/Webproject2_DB/index.php/api').replace(/\/$/, '');
+const API_BASE = (window.__API_BASE__ || '/index.php/api').replace(/\/$/, '');
 
 class API {
     
@@ -11,9 +11,7 @@ class API {
         const url = `${API_BASE}${normalizedEndpoint}`;
         const hasBody = Object.prototype.hasOwnProperty.call(options, 'body');
         const isPublicAuthEndpoint = normalizedEndpoint === '/auth/login' || normalizedEndpoint === '/auth/register';
-        const headers = {
-            'ngrok-skip-browser-warning': 'true'
-        };
+        const headers = {};
 
         if (hasBody && !options.headers?.['Content-Type']) {
             headers['Content-Type'] = 'application/json';
