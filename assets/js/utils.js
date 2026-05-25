@@ -4,7 +4,14 @@
 
 // Show toast notification
 function showToast(message, type = 'info', duration = 3000) {
-    const container = document.getElementById('toast-container');
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
@@ -128,6 +135,14 @@ function displayFormErrors(errors, formId) {
         if (errorEl && messages.length > 0) {
             errorEl.textContent = messages[0];
         }
+    }
+
+    const firstError = Object.values(errors)
+        .flat()
+        .find(message => typeof message === 'string' && message.trim());
+
+    if (firstError) {
+        showToast(firstError, 'warning', 4500);
     }
 }
 

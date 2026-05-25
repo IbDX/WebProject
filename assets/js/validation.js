@@ -23,44 +23,48 @@ class FormValidator {
                 switch (ruleName) {
                     case 'required':
                         if (!value) {
-                            this.addError(fieldName, `${this.formatFieldName(fieldName)} is required`);
+                            this.addError(fieldName, `${this.formatFieldName(fieldName)} is required to continue.`);
                         }
                         break;
                         
                     case 'email':
                         if (value && !isValidEmail(value)) {
-                            this.addError(fieldName, 'Please enter a valid email address');
+                            this.addError(fieldName, 'Enter a valid email address to continue.');
                         }
                         break;
                         
                     case 'min':
                         if (value && value.length < parseInt(params[0])) {
-                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must be at least ${params[0]} characters`);
+                            const minimumMessage = fieldName.toLowerCase().includes('password')
+                                ? `${this.formatFieldName(fieldName)} must be at least ${params[0]} characters long.`
+                                : `${this.formatFieldName(fieldName)} must be at least ${params[0]} characters.`;
+                            this.addError(fieldName, minimumMessage);
                         }
                         break;
                         
                     case 'max':
                         if (value && value.length > parseInt(params[0])) {
-                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must not exceed ${params[0]} characters`);
+                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must not exceed ${params[0]} characters.`);
                         }
                         break;
                         
                     case 'match':
                         const targetInput = this.form.querySelector(`[name="${params[0]}"]`);
                         if (value && targetInput && value !== targetInput.value) {
-                            this.addError(fieldName, 'Passwords do not match');
+                            const targetName = this.formatFieldName(params[0]);
+                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must match ${targetName}.`);
                         }
                         break;
                         
                     case 'phone':
                         if (value && !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4}$/.test(value)) {
-                            this.addError(fieldName, 'Please enter a valid phone number');
+                            this.addError(fieldName, 'Enter a valid phone number, such as +1234567890.');
                         }
                         break;
                         
                     case 'number':
                         if (value && isNaN(value)) {
-                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must be a number`);
+                            this.addError(fieldName, `${this.formatFieldName(fieldName)} must be a number.`);
                         }
                         break;
                 }

@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 type="password" 
                                 id="current-password" 
                                 name="current_password" 
-                                required
+                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
                             >
                         </div>
                         
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             >
                             <div class="password-strength" id="change-password-strength"></div>
                             <small class="form-hint">
-                                Password must contain uppercase, lowercase, numbers, and special characters
+                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
                             </small>
                         </div>
                         
@@ -92,7 +92,7 @@ function setupChangePasswordForm() {
         const validator = new FormValidator('change-password-form');
         if (!validator.validate({
             'current_password': ['required'],
-            'new_password': ['required', 'min:12'],
+            'new_password': ['required', 'min:8'],
             'confirm_password': ['required', 'match:new_password']
         })) {
             validator.displayErrors();

@@ -82,7 +82,7 @@ function setupRegisterForm() {
             'last_name': ['required'],
             'email': ['required', 'email'],
             'date_of_birth': ['required'],
-            'password': ['required', 'min:12'],
+            'password': ['required', 'min:8'],
             'password_confirm': ['required', 'match:password']
         })) {
             validator.displayErrors();
@@ -149,8 +149,11 @@ function confirmDeactivate() {
         return;
     }
     
-    const password = prompt('Enter your password to confirm account deactivation:');
-    if (!password) return;
+    const password = prompt('Enter your password to confirm account deactivation. This action permanently disables your profile.');
+    if (!password) {
+        showToast('Enter your password to continue with account deactivation.', 'warning');
+        return;
+    }
     
     deactivateAccount(password);
 }
