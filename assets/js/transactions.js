@@ -12,9 +12,20 @@ async function loadDashboard() {
         
         // Load accounts
         const accountsResponse = await API.listAccounts();
+        let beneficiaries = [];
+
+        try {
+            const beneficiariesResponse = await API.listBeneficiaries();
+            if (beneficiariesResponse.success) {
+                beneficiaries = beneficiariesResponse.data || [];
+            }
+        } catch (error) {
+            console.warn('Failed to load beneficiaries:', error);
+        }
+
         if (accountsResponse.success) {
             displayAccounts(accountsResponse.data);
-            populateAccountSelects(accountsResponse.data);
+            populateAccountSelects(accountsResponse.data, beneficiaries);
         }
         
         // Load recent transactions
@@ -53,8 +64,14 @@ function displayAccounts(accounts) {
     `).join('');
 }
 
-// Populate account selects
-function populateAccountSelects(accounts) {
+// Populate account selects and keep cached lists for transfer rendering
+let __cachedAccounts = [];
+let __cachedBeneficiaries = [];
+
+function populateAccountSelects(accounts, beneficiaries = []) {
+    __cachedAccounts = accounts || [];
+    __cachedBeneficiaries = beneficiaries || [];
+
     const accountSelects = [
         'deposit-account',
         'withdraw-account',
@@ -73,13 +90,40 @@ function populateAccountSelects(accounts) {
         select.innerHTML = `<option value="">Choose an account...</option>${options}`;
     });
     
-    // For transfer destination, populate with all accounts
+    // Render transfer-to based on current destination toggle
+    updateTransferDestinationType();
+}
+
+function renderTransferToOptions(destinationType) {
     const transferTo = document.getElementById('transfer-to');
-    if (transferTo) {
-        transferTo.innerHTML = accounts.map(acc => 
+    if (!transferTo) return;
+
+    if (destinationType === 'my_account') {
+        if (__cachedAccounts.length === 0) {
+            transferTo.innerHTML = '<option value="">No accounts available</option>';
+            return;
+        }
+
+        transferTo.innerHTML = `<option value="">Choose destination...</option>` + __cachedAccounts.map(acc =>
             `<option value="${acc.account_id}">${acc.account_type} - ${maskAccountNumber(acc.account_number)}</option>`
         ).join('');
+    } else {
+        if (__cachedBeneficiaries.length === 0) {
+            transferTo.innerHTML = '<option value="">No beneficiaries saved</option>';
+            return;
+        }
+
+        transferTo.innerHTML = `<option value="">Choose destination...</option>` + __cachedBeneficiaries.map(beneficiary => 
+            `<option value="${beneficiary.account_number}">${beneficiary.beneficiary_name} - ${maskAccountNumber(beneficiary.account_number)}</option>`
+        ).join('');
     }
+}
+
+function updateTransferDestinationType() {
+    const radios = document.getElementsByName('transfer_destination_type');
+    let destination = 'beneficiary';
+    for (const r of radios) if (r.checked) destination = r.value;
+    renderTransferToOptions(destination);
 }
 
 // Display recent transactions
@@ -205,6 +249,29 @@ function displayPagination(pagination) {
 
 // Setup transaction forms
 document.addEventListener('DOMContentLoaded', function() {
+    // Create account form
+    setupFormValidation('create-account-form', {
+        'account_type': ['required']
+    }, async (formData) => {
+        const accountType = formData.get('account_type');
+
+        try {
+            const response = await API.createAccount(accountType);
+            if (response.success) {
+                showToast('Account created successfully!', 'success');
+                document.getElementById('create-account-form').reset();
+                setTimeout(() => {
+                    switchView('dashboard');
+                    loadDashboard();
+                }, 1000);
+            } else {
+                showToast(response.message || 'Account creation failed', 'error');
+            }
+        } catch (error) {
+            showToast('Account creation failed: ' + error.message, 'error');
+        }
+    });
+
     // Deposit form
     setupFormValidation('deposit-form', {
         'account_id': ['required'],
@@ -260,12 +327,25 @@ document.addEventListener('DOMContentLoaded', function() {
         'amount': ['required', 'number']
     }, async (formData) => {
         const fromAccountId = formData.get('from_account_id');
-        const toAccountId = formData.get('to_account_id');
+        const toAccountValue = formData.get('to_account_id');
         const amount = formData.get('amount');
         const description = formData.get('description');
-        
+
+        // Determine destination type
+        const radios = document.getElementsByName('transfer_destination_type');
+        let destination = 'beneficiary';
+        for (const r of radios) if (r.checked) destination = r.value;
+
         try {
-            const response = await API.transfer(fromAccountId, toAccountId, amount, description);
+            let response;
+            if (destination === 'my_account') {
+                // toAccountValue is account_id (numeric)
+                response = await API.transfer(fromAccountId, toAccountValue, amount, description);
+            } else {
+                // beneficiary account_number
+                response = await API.transfer(fromAccountId, toAccountValue, amount, description);
+            }
+
             if (response.success) {
                 showToast('Transfer successful!', 'success');
                 document.getElementById('transfer-form').reset();
@@ -296,6 +376,10 @@ async function loadProfile() {
             const user = response.data;
             document.getElementById('profile-first-name').value = user.first_name || '';
             document.getElementById('profile-last-name').value = user.last_name || '';
+            const aliasField = document.getElementById('profile-alias-name');
+            if (aliasField) {
+                aliasField.value = user.alias_name || '';
+            }
             document.getElementById('profile-email').value = user.email;
             document.getElementById('profile-phone').value = user.phone_number || '';
             document.getElementById('profile-city').value = user.city || '';
@@ -329,3 +413,89 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Load accounts into Manage Accounts view
+async function loadManageAccounts() {
+    if (!checkAuth()) return;
+
+    const container = document.getElementById('manage-accounts-list');
+    if (!container) return;
+
+    console.debug('loadManageAccounts: started');
+
+    try {
+        const response = await API.listAccounts();
+        console.debug('loadManageAccounts: API.listAccounts response=', response);
+        if (!response.success) {
+            container.innerHTML = '<p class="empty">Failed to load accounts</p>';
+            return;
+        }
+
+        const accounts = response.data || [];
+        if (accounts.length === 0) {
+            container.innerHTML = '<p class="empty">No accounts found</p>';
+            return;
+        }
+
+        container.innerHTML = accounts.map(acc => `
+            <div class="card manage-account-item" role="article">
+                <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+                    <div class="manage-account-info">
+                        <div class="list-item-title">${acc.account_type.replace('_',' ')} — <span class="account-mask">${maskAccountNumber(acc.account_number)}</span> <span class="badge badge-primary">${acc.status}</span></div>
+                        <div class="list-item-subtitle">Balance: ${formatCurrency(acc.balance)}</div>
+                    </div>
+                    <div class="manage-account-actions" style="display:flex;gap:0.5rem;align-items:center;">
+                        <button class="btn ${(acc.status === 'inactive' || acc.status === 'frozen') ? 'btn-success' : 'btn-warning'}" onclick="toggleAccountStatus(${acc.account_id}, '${acc.status}')">${(acc.status === 'inactive' || acc.status === 'frozen') ? 'Activate' : 'Deactivate'}</button>
+                        <button class="btn btn-danger" onclick="closeAccount(${acc.account_id})">Close</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        container.innerHTML = '<p class="empty">Failed to load accounts</p>';
+    }
+}
+
+// Close account action
+async function closeAccount(accountId) {
+    if (!confirm('Are you sure you want to close this account? Balance must be zero.')) return;
+    try {
+        const response = await API.closeAccount(accountId);
+        if (response.success) {
+            showToast('Account closed', 'success');
+            loadManageAccounts();
+            loadDashboard();
+        } else {
+            showToast(response.message || 'Failed to close account', 'error');
+        }
+    } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+    }
+}
+
+// Toggle account status between active and inactive
+async function toggleAccountStatus(accountId, currentStatus) {
+    const isInactive = currentStatus === 'inactive' || currentStatus === 'frozen';
+    const actionLabel = isInactive ? 'activate' : 'deactivate';
+    const confirmMessage = isInactive
+        ? 'Activate this account again?'
+        : 'Deactivate this account? This will mark the account inactive but will not deactivate your user account.';
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+        const response = isInactive
+            ? await API.activateAccount(accountId)
+            : await API.deactivateAccount(accountId);
+
+        if (response.success) {
+            showToast(`Account ${actionLabel}d`, 'success');
+            loadManageAccounts();
+            loadDashboard();
+        } else {
+            showToast(response.message || `Failed to ${actionLabel} account`, 'error');
+        }
+    } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+    }
+}

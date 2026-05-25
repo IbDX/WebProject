@@ -400,6 +400,45 @@
     display: inline-block;
 }
 
+/* Manage Accounts specific styles */
+.manage-accounts-controls {
+    margin-bottom: 1rem;
+}
+
+#manage-accounts-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.manage-account-item .manage-account-info {
+    min-width: 0;
+}
+
+.manage-account-item .list-item-title {
+    font-size: 1rem;
+}
+
+.manage-account-item .account-mask {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.manage-account-actions .btn {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+}
+
+.btn-warning {
+    background-color: #ffb74d;
+    color: #111;
+    border: none;
+}
+
+.btn-warning:hover { opacity: 0.95; }
+
+.manage-account-item .card-body { padding: 0.75rem 1rem; }
+
 .dropdown-trigger {
     background: none;
     border: none;

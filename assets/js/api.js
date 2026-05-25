@@ -97,6 +97,13 @@ class API {
             method: 'GET'
         });
     }
+
+    static async createAccount(accountType) {
+        return this.request('/accounts', {
+            method: 'POST',
+            body: JSON.stringify({ account_type: accountType })
+        });
+    }
     
     static async getAccount(accountId) {
         return this.request(`/accounts/${accountId}`, {
@@ -118,19 +125,40 @@ class API {
         });
     }
     
-    static async transfer(fromAccountId, toAccountId, amount, description) {
+    static async transfer(fromAccountId, toAccountNumber, amount, description) {
+        // Accept either numeric account id (toAccountNumber may be id) or account_number
+        const body = { amount, description };
+        if (toAccountNumber === null || toAccountNumber === undefined) {
+            throw new Error('Destination account required');
+        }
+
+        // treat pure digits as account id
+        if (/^\d+$/.test(String(toAccountNumber))) {
+            body.to_account_id = Number(toAccountNumber);
+        } else {
+            body.to_account_number = toAccountNumber;
+        }
+
         return this.request(`/accounts/${fromAccountId}/transfer`, {
             method: 'POST',
-            body: JSON.stringify({
-                to_account_id: toAccountId,
-                amount,
-                description
-            })
+            body: JSON.stringify(body)
         });
     }
     
     static async closeAccount(accountId) {
         return this.request(`/accounts/${accountId}/close`, {
+            method: 'POST'
+        });
+    }
+
+    static async deactivateAccount(accountId) {
+        return this.request(`/accounts/${accountId}/deactivate`, {
+            method: 'POST'
+        });
+    }
+
+    static async activateAccount(accountId) {
+        return this.request(`/accounts/${accountId}/activate`, {
             method: 'POST'
         });
     }
@@ -179,7 +207,7 @@ class API {
         });
     }
     
-    static async deactivateAccount(password) {
+    static async deactivateProfile(password) {
         return this.request('/profile/deactivate', {
             method: 'POST',
             body: JSON.stringify({ password })

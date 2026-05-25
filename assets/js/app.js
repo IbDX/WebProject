@@ -187,6 +187,7 @@ function setupBeneficiariesView() {
                 
                 <div class="container">
                     <button class="btn btn-primary" onclick="showAddBeneficiaryForm()">Add Beneficiary</button>
+                    <div id="beneficiary-form-container" style="display: none;"></div>
                     <div id="beneficiaries-list" class="beneficiaries-list">
                         <p class="loading">Loading beneficiaries...</p>
                     </div>
@@ -195,6 +196,130 @@ function setupBeneficiariesView() {
         `;
         
         document.getElementById('app').insertAdjacentHTML('beforeend', beneficiariesHtml);
+    }
+
+    loadBeneficiariesList();
+}
+
+function showAddBeneficiaryForm() {
+    const container = document.getElementById('beneficiary-form-container');
+    if (!container) return;
+
+    container.style.display = 'block';
+    container.innerHTML = `
+        <form id="beneficiary-form" class="transaction-form" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label for="beneficiary-alias-name">Alias Name</label>
+                <input type="text" id="beneficiary-alias-name" name="alias_name" placeholder="e.g., Rent, Mom, Salary account" required>
+            </div>
+            <div class="form-group">
+                <label for="beneficiary-lookup-type">Add By</label>
+                <select id="beneficiary-lookup-type" name="lookup_type" required onchange="updateBeneficiaryLookupFields()">
+                    <option value="phone_number">Phone Number</option>
+                    <option value="profile_alias">Profile Alias</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="beneficiary-lookup-value" id="beneficiary-lookup-label">Phone Number</label>
+                <input type="text" id="beneficiary-lookup-value" name="lookup_value" placeholder="Enter phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="beneficiary-bank-name">Bank Name (Optional)</label>
+                <input type="text" id="beneficiary-bank-name" name="bank_name">
+            </div>
+            <div class="form-group">
+                <label for="beneficiary-relationship">Relationship (Optional)</label>
+                <input type="text" id="beneficiary-relationship" name="relationship">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Beneficiary</button>
+                <button type="button" class="btn btn-secondary" onclick="hideAddBeneficiaryForm()">Cancel</button>
+            </div>
+            <div class="form-error" id="beneficiary-form-error" style="display: none;"></div>
+        </form>
+    `;
+
+    updateBeneficiaryLookupFields();
+
+    const form = document.getElementById('beneficiary-form');
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const payload = {
+            alias_name: (formData.get('alias_name') || '').trim(),
+            lookup_type: formData.get('lookup_type'),
+            lookup_value: (formData.get('lookup_value') || '').trim(),
+            bank_name: (formData.get('bank_name') || '').trim(),
+            relationship: (formData.get('relationship') || '').trim()
+        };
+
+        try {
+            const response = await API.addBeneficiary(payload);
+            if (response.success) {
+                showToast('Beneficiary added successfully', 'success');
+                hideAddBeneficiaryForm();
+                loadBeneficiariesList();
+                loadDashboard();
+            } else {
+                showToast(response.message || 'Failed to add beneficiary', 'error');
+            }
+        } catch (error) {
+            showToast('Failed to add beneficiary: ' + error.message, 'error');
+        }
+    });
+}
+
+function updateBeneficiaryLookupFields() {
+    const lookupType = document.getElementById('beneficiary-lookup-type');
+    const lookupLabel = document.getElementById('beneficiary-lookup-label');
+    const lookupInput = document.getElementById('beneficiary-lookup-value');
+
+    if (!lookupType || !lookupLabel || !lookupInput) return;
+
+    if (lookupType.value === 'phone_number') {
+        lookupLabel.textContent = 'Phone Number';
+        lookupInput.placeholder = 'Enter phone number';
+    } else if (lookupType.value === 'profile_alias') {
+        lookupLabel.textContent = 'Profile Alias';
+        lookupInput.placeholder = 'Enter profile alias';
+    }
+}
+
+function hideAddBeneficiaryForm() {
+    const container = document.getElementById('beneficiary-form-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    container.style.display = 'none';
+}
+
+async function loadBeneficiariesList() {
+    const container = document.getElementById('beneficiaries-list');
+    if (!container || !checkAuth()) return;
+
+    try {
+        const response = await API.listBeneficiaries();
+        if (!response.success) {
+            container.innerHTML = '<p class="empty">Failed to load beneficiaries</p>';
+            return;
+        }
+
+        const beneficiaries = response.data || [];
+        if (beneficiaries.length === 0) {
+            container.innerHTML = '<p class="empty">No beneficiaries saved</p>';
+            return;
+        }
+
+        container.innerHTML = beneficiaries.map(beneficiary => `
+            <div class="beneficiary-item">
+                <strong>${beneficiary.beneficiary_name}</strong>
+                <div>${maskAccountNumber(beneficiary.account_number)}</div>
+                <small>${beneficiary.bank_name || 'No bank name provided'}</small>
+            </div>
+        `).join('');
+    } catch (error) {
+        container.innerHTML = '<p class="empty">Failed to load beneficiaries</p>';
     }
 }
 

@@ -72,6 +72,14 @@ function switchView(viewName) {
             loadTransactionHistory();
         } else if (viewName === 'profile') {
             loadProfile();
+        } else if (viewName === 'manage-accounts') {
+            // Load account list for management
+            if (typeof loadManageAccounts === 'function') {
+                console.debug('switchView: loading manage accounts view');
+                loadManageAccounts();
+            } else {
+                console.debug('switchView: loadManageAccounts not defined yet');
+            }
         }
     }
 }

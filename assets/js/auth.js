@@ -158,7 +158,7 @@ function confirmDeactivate() {
 // Deactivate account
 async function deactivateAccount(password) {
     try {
-        const response = await API.deactivateAccount(password);
+        const response = await API.deactivateProfile(password);
         
         if (response.success) {
             showToast('Account deactivated successfully', 'success');

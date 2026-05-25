@@ -260,6 +260,10 @@
                             <span class="icon">👥</span>
                             <span>Beneficiaries</span>
                         </button>
+                        <button class="btn btn-action" onclick="switchView('open-account')">
+                            <span class="icon">🏦</span>
+                            <span>Open Account</span>
+                        </button>
                     </div>
                 </section>
                 
@@ -418,6 +422,10 @@
                     
                     <div class="form-group">
                         <label for="transfer-to">To Account</label>
+                        <div class="transfer-destination-toggle">
+                            <label><input type="radio" name="transfer_destination_type" value="beneficiary" checked onchange="updateTransferDestinationType()"> Saved Beneficiary</label>
+                            <label><input type="radio" name="transfer_destination_type" value="my_account" onchange="updateTransferDestinationType()"> My Account</label>
+                        </div>
                         <select id="transfer-to" name="to_account_id" required>
                             <option value="">Choose destination...</option>
                         </select>
@@ -455,6 +463,53 @@
                 </form>
             </div>
         </section>
+
+        <!-- Open Account View -->
+        <section id="open-account-view" class="transaction-view">
+            <nav class="navbar">
+                <button onclick="switchView('dashboard')" class="btn-back">Back</button>
+                <div class="navbar-title">Open New Account</div>
+            </nav>
+
+            <div class="container form-container">
+                <form id="create-account-form" class="transaction-form">
+                    <div class="form-group">
+                        <label for="create-account-type">Account Type</label>
+                        <select id="create-account-type" name="account_type" required>
+                            <option value="">Choose an account type...</option>
+                            <option value="savings">Savings</option>
+                            <option value="checking">Checking</option>
+                            <option value="money_market">Money Market</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <small class="form-hint">You can create one account of each type.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    <div class="form-error" id="create-account-error" style="display: none;"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Manage Accounts View -->
+        <section id="manage-accounts-view" class="main-view">
+            <nav class="navbar">
+                <button onclick="switchView('profile')" class="btn-back">Back</button>
+                <div class="navbar-title">Manage Accounts</div>
+            </nav>
+
+            <div class="container">
+                <div class="manage-accounts-controls">
+                    <button class="btn btn-primary" onclick="switchView('open-account')">Open New Account</button>
+                </div>
+
+                <div id="manage-accounts-list" class="accounts-list">
+                    <p class="loading">Loading accounts...</p>
+                </div>
+            </div>
+        </section>
         
         <!-- Profile View -->
         <section id="profile-view" class="main-view">
@@ -476,6 +531,11 @@
                                 <label for="profile-last-name">Last Name</label>
                                 <input type="text" id="profile-last-name" name="last_name">
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-alias-name">Profile Alias</label>
+                            <input type="text" id="profile-alias-name" name="alias_name" placeholder="Alias others can use to find you">
                         </div>
                         
                         <div class="form-group">
@@ -503,6 +563,11 @@
                         <div class="form-error" id="profile-error" style="display: none;"></div>
                     </form>
                 </div>
+
+                <div class="accounts-section small">
+                    <h2>Accounts</h2>
+                    <button class="btn btn-secondary" onclick="switchView('manage-accounts')">Manage Accounts</button>
+                </div>
                 
                 <div class="security-section">
                     <h2>Security</h2>
@@ -526,11 +591,11 @@
     
     <!-- Scripts -->
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/utils.js?v=20260525-2"></script>
     <script src="assets/js/validation.js"></script>
-    <script src="assets/js/api.js?v=20260525-1"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/transactions.js"></script>
+    <script src="assets/js/api.js?v=20260525-2"></script>
+    <script src="assets/js/auth.js?v=20260525-2"></script>
+    <script src="assets/js/transactions.js?v=20260525-2"></script>
     <script src="assets/js/app.js"></script>
 </body>
 </html>
