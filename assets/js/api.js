@@ -2,7 +2,7 @@
  * API Communication Layer
  */
 
-const API_BASE = (window.__API_BASE__ || 'https://subjects-sacramento-upgrading-hopkins.trycloudflare.com/index.php/api').replace(/\/$/, '');
+const API_BASE = (window.__API_BASE__ || 'https://subjects-sacramento-upgrading-hopkins.trycloudflare.com/Webproject2_DB/index.php/api').replace(/\/$/, '');
 
 class API {
     
