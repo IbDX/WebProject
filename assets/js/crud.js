@@ -1,6 +1,6 @@
 // Simple AJAX helpers for the CRUD demo (uses JSON API endpoint)
 (function () {
-    const CRUD_BASE = window.__CRUD_BASE__ || '/Webproject2_DB/public/crud_handler.php';
+    const CRUD_BASE = window.__CRUD_BASE__ || 'https://earpiece-fondly-partake.ngrok-free.dev/public/crud_handler.php';
     const out = document.getElementById('result-output');
     const form = document.getElementById('crud-form');
 

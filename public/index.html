@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <script>
         (function () {
+            var backendBase = 'https://earpiece-fondly-partake.ngrok-free.dev';
+            window.__API_BASE__ = backendBase + '/index.php/api';
+            window.__CRUD_BASE__ = backendBase + '/public/crud_handler.php';
             var key = 'theme';
             var dark = 'dark';
             var light = 'light';
@@ -525,7 +528,7 @@
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/validation.js"></script>
-    <script src="assets/js/api.js"></script>
+    <script src="assets/js/api.js?v=20260525-1"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/transactions.js"></script>
     <script src="assets/js/app.js"></script>

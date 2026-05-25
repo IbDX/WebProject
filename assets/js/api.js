@@ -2,18 +2,25 @@
  * API Communication Layer
  */
 
-const API_BASE = '/Webproject2_DB/index.php/api';
+const API_BASE = (window.__API_BASE__ || 'https://earpiece-fondly-partake.ngrok-free.dev/index.php/api').replace(/\/$/, '');
 
 class API {
     
     static async request(endpoint, options = {}) {
-        const url = `${API_BASE}${endpoint}`;
+        const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+        const url = `${API_BASE}${normalizedEndpoint}`;
+        const hasBody = Object.prototype.hasOwnProperty.call(options, 'body');
+        const isPublicAuthEndpoint = normalizedEndpoint === '/auth/login' || normalizedEndpoint === '/auth/register';
         const headers = {
-            'Content-Type': 'application/json'
+            'ngrok-skip-browser-warning': 'true'
         };
+
+        if (hasBody && !options.headers?.['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
         
         // Add auth token if available
-        const token = getAuthToken();
+        const token = !isPublicAuthEndpoint ? getAuthToken() : null;
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
@@ -55,6 +62,9 @@ class API {
     static async register(userData) {
         return this.request('/auth/register', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(userData)
         });
     }
@@ -62,6 +72,9 @@ class API {
     static async login(email, password) {
         return this.request('/auth/login', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ email, password })
         });
     }

@@ -13,7 +13,7 @@ Backend repo: [c:\AppServ\www\Webproject2_DB](c:/AppServ/www/Webproject2_DB)
 ## Runtime config
 The root `index.html` selects the backend automatically:
 - Local development: `/Webproject2_DB/index.php/api`
-- GitHub Pages: replace the placeholder backend URL in `index.html` with your Cloudflare Tunnel hostname
+- GitHub Pages: set the backend host in `index.html` to your ngrok or Cloudflare Tunnel hostname
 
 The same pattern applies to the CRUD demo handler.
 

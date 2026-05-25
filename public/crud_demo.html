@@ -94,7 +94,16 @@
         </div>
     </div>
 
+    <script>
+        (function () {
+            var base = (window.__CRUD_BASE__ || '/Webproject2_DB/public/crud_handler.php').replace(/\/$/, '');
+            var form = document.getElementById('crud-form');
+            if (form) {
+                form.action = base;
+            }
+        })();
+    </script>
     <script src="../assets/js/theme.js"></script>
-    <script src="../assets/js/crud.js"></script>
+    <script src="../assets/js/crud.js?v=20260525-1"></script>
 </body>
 </html>
