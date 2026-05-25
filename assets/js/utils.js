@@ -196,13 +196,13 @@ function isValidEmail(email) {
 
 // Validate password strength
 function getPasswordStrength(password) {
-    let strength = 0;
+    let strength = 2;
     
-    if (password.length >= 12) strength++;
+    if (password.length >= 8) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[a-z]/.test(password)) strength++;
     if (/\d/.test(password)) strength++;
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+    
     
     return strength;
 }
