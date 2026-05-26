@@ -27,18 +27,49 @@ require_once __DIR__ . '/../../config/database.php';
 class AuthMiddleware {
     
     private static $currentUser = null;
+
+    /**
+     * Detect whether the current request is served over HTTPS.
+     */
+    private static function isSecureRequest() {
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            return true;
+        }
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            return strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https';
+        }
+
+        if (isset($_SERVER['REQUEST_SCHEME'])) {
+            return strtolower($_SERVER['REQUEST_SCHEME']) === 'https';
+        }
+
+        return false;
+    }
     
     /**
      * Initialize Session
      */
     public static function initSession() {
         if (session_status() === PHP_SESSION_NONE) {
-            // Secure session configuration
-            ini_set('session.cookie_httponly', 1);
-            ini_set('session.cookie_secure', getenv('SESSION_COOKIE_SECURE') ?: 1);
-            ini_set('session.cookie_samesite', getenv('SESSION_COOKIE_SAMESITE') ?: 'None');
-            ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
-            ini_set('session.use_strict_mode', 1);
+            // Align cookie settings with the current transport so the browser
+            // can actually return the PHP session on the next API request.
+            $isSecure = self::isSecureRequest();
+            $sameSite = $isSecure ? 'None' : 'Lax';
+
+            session_set_cookie_params([
+                'lifetime' => SESSION_LIFETIME,
+                'path' => '/',
+                'secure' => $isSecure,
+                'httponly' => true,
+                'samesite' => $sameSite,
+            ]);
+
+            ini_set('session.cookie_httponly', '1');
+            ini_set('session.cookie_secure', $isSecure ? '1' : '0');
+            ini_set('session.cookie_samesite', $sameSite);
+            ini_set('session.gc_maxlifetime', (string) SESSION_LIFETIME);
+            ini_set('session.use_strict_mode', '1');
             
             session_start();
         }
