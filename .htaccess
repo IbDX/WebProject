@@ -2,6 +2,12 @@
     RewriteEngine On
     RewriteBase /WebProject/
 
+    # Force HTTPS (including proxy-aware checks used by shared hosting).
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteCond %{HTTP:X-Forwarded-SSL} !on [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
     # Keep the frontend served through the root index entry point.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
