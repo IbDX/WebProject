@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /WebProject/
+    RewriteBase /
 
     # Force HTTPS (including proxy-aware checks used by shared hosting).
     RewriteCond %{HTTPS} !=on
@@ -11,7 +11,7 @@
     # Keep the frontend served through the root index entry point.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [L,QSA]
+    RewriteRule ^(.*)$ /index.php [L,QSA]
 </IfModule>
 
 <IfModule mod_headers.c>
