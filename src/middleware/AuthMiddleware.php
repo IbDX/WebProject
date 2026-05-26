@@ -1,24 +1,7 @@
 <?php
-$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = ['https://ibdx.github.io'];
-$isLocalDevOrigin = $requestOrigin !== '' && preg_match('#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$#', $requestOrigin) === 1;
-
-if ($requestOrigin !== '' && ($isLocalDevOrigin || in_array($requestOrigin, $allowedOrigins, true))) {
-    header('Access-Control-Allow-Origin: ' . $requestOrigin);
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, ngrok-skip-browser-warning');
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Max-Age: 86400');
-    header('Vary: Origin');
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 /**
  * Authentication Middleware - Session and permission validation
+ * CORS headers are handled centrally in Router.php — do not duplicate here.
  */
 
 require_once __DIR__ . '/../utils/SecurityHelper.php';

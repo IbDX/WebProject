@@ -180,41 +180,5 @@ class SecurityHelper {
         return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
     }
     
-    /**
-     * Validate Password Strength
-     * 
-    * Requires:
-    * - Minimum 12 characters
-    * - At least one uppercase letter
-    * - At least one lowercase letter
-    * - At least one digit
-    * - At least one special character
-     * 
-     * @param string $password Password to validate
-     * @return array Status and message
-     */
-    public static function validatePasswordStrength($password) {
-        $errors = [];
-        
-        if (strlen($password) < 8) {
-            $errors[] = "Password must be at least 8 characters long";
-        }
-        
-        if (!preg_match('/[A-Z]/', $password)) {
-            $errors[] = "Password must contain at least one uppercase letter";
-        }
-        
-        if (!preg_match('/[a-z]/', $password)) {
-            $errors[] = "Password must contain at least one lowercase letter";
-        }
-        
-        if (!preg_match('/\\d/', $password)) {
-            $errors[] = "Password must contain at least one digit";
-        }
-        return [
-            'valid' => empty($errors),
-            'errors' => $errors
-        ];
-    }
 }
 ?>

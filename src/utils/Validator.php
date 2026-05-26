@@ -5,7 +5,7 @@
 
 class Validator {
     
-    private static $errors = [];
+    public static $errors = [];
     
     /**
      * Validate Required Field
@@ -50,6 +50,22 @@ class Validator {
             self::$errors[$fieldName][] = "{$fieldName} must be at least {$min} characters";
             return false;
         }
+        return true;
+    }
+
+    /**
+     * Validate Password Policy
+     * 
+     * @param string $value Password value
+     * @param string $fieldName Field name for error message
+     * @return bool True if password meets the simplified policy
+     */
+    public static function passwordPolicy($value, $fieldName = 'Password') {
+        if (!preg_match('/^[A-Za-z0-9]{8,}$/', $value)) {
+            self::$errors[$fieldName][] = "{$fieldName} must be at least 8 characters long and contain only letters and numbers";
+            return false;
+        }
+
         return true;
     }
     

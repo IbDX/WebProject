@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <script>
         (function () {
-            window.__API_BASE__ = '/index.php/api';
+            window.__API_BASE__ = '/WebProject/api';
             window.__CRUD_BASE__ = '/public/crud_handler.php';
             var key = 'theme';
             var dark = 'dark';
@@ -162,13 +162,13 @@
                                 type="password" 
                                 id="reg-password" 
                                 name="password" 
-                                placeholder="Minimum 8 characters"
+                                placeholder="Letters and numbers only"
                                 required
                             >
                             <div class="password-strength" id="password-strength"></div>
                             <span class="error-message" id="reg-password-error"></span>
                             <small class="form-hint">
-                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
+                                Password must be at least 8 characters long and contain only letters and numbers.
                             </small>
                         </div>
                         

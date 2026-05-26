@@ -2,7 +2,7 @@
  * API Communication Layer
  */
 
-const API_BASE = (window.__API_BASE__ || '/index.php/api').replace(/\/$/, '');
+const API_BASE = (window.__API_BASE__ || '/WebProject/api').replace(/\/$/, '');
 
 class API {
     

@@ -6,6 +6,7 @@
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../utils/SecurityHelper.php';
 require_once __DIR__ . '/../utils/Validator.php';
+require_once __DIR__ . '/Account.php';
 
 class User {
     
@@ -22,20 +23,13 @@ class User {
         Validator::email($data['email'] ?? '', 'Email');
         Validator::required($data['password'] ?? '', 'Password');
         Validator::required($data['password_confirm'] ?? '', 'Password Confirmation');
-        Validator::minLength($data['password'] ?? '', 8, 'Password');
+        Validator::passwordPolicy($data['password'] ?? '', 'Password');
         Validator::required($data['first_name'] ?? '', 'First Name');
         Validator::required($data['last_name'] ?? '', 'Last Name');
         Validator::required($data['date_of_birth'] ?? '', 'Date of Birth');
         
         // Ensure password and confirmation match (add error if not)
         Validator::match($data['password'] ?? '', $data['password_confirm'] ?? '', 'Passwords');
-        
-        $passwordStrength = SecurityHelper::validatePasswordStrength($data['password'] ?? '');
-        if (!$passwordStrength['valid']) {
-            foreach ($passwordStrength['errors'] as $error) {
-                Validator::$errors['password'][] = $error;
-            }
-        }
         
         if (Validator::hasErrors()) {
             return [
@@ -247,14 +241,7 @@ class User {
         Validator::clearErrors();
         Validator::required($currentPassword, 'Current Password');
         Validator::required($newPassword, 'New Password');
-        Validator::minLength($newPassword, 8, 'New Password');
-        
-        $passwordStrength = SecurityHelper::validatePasswordStrength($newPassword);
-        if (!$passwordStrength['valid']) {
-            foreach ($passwordStrength['errors'] as $error) {
-                Validator::$errors['password'][] = $error;
-            }
-        }
+        Validator::passwordPolicy($newPassword, 'New Password');
         
         if (Validator::hasErrors()) {
             return [

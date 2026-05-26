@@ -1,24 +1,7 @@
 <?php
-$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = ['https://ibdx.github.io'];
-$isLocalDevOrigin = $requestOrigin !== '' && preg_match('#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$#', $requestOrigin) === 1;
-
-if ($requestOrigin !== '' && ($isLocalDevOrigin || in_array($requestOrigin, $allowedOrigins, true))) {
-    header('Access-Control-Allow-Origin: ' . $requestOrigin);
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin, ngrok-skip-browser-warning');
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Max-Age: 86400');
-    header('Vary: Origin');
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 /**
  * Auth Controller - Authentication operations
+ * CORS headers are handled centrally in Router.php — do not duplicate here.
  */
 
 require_once __DIR__ . '/../../config/database.php';
@@ -37,13 +20,29 @@ class AuthController {
         $input = json_decode(file_get_contents('php://input'), true);
         
         if (!$input) {
-            Response::error('Invalid request', 400);
+            Response::error('Invalid request body', 400);
+        }
+
+        // Sanitize string fields before validation
+        $stringFields = ['email', 'first_name', 'last_name', 'phone_number',
+                         'date_of_birth', 'address', 'city', 'state', 'zip_code', 'country'];
+        foreach ($stringFields as $field) {
+            if (isset($input[$field]) && is_string($input[$field])) {
+                $input[$field] = trim($input[$field]);
+            }
+        }
+        if (isset($input['email'])) {
+            $input['email'] = strtolower($input['email']);
         }
         
         // Register user
         $result = User::create($input);
         
         if (!$result['success']) {
+            // Use 409 Conflict for duplicate email
+            if (isset($result['code']) && $result['code'] === 'email_exists') {
+                Response::error($result['message'], 409);
+            }
             Response::error(
                 $result['message'],
                 isset($result['errors']) ? 422 : 400,
@@ -67,9 +66,13 @@ class AuthController {
         if (!$input || empty($input['email']) || empty($input['password'])) {
             Response::validationError(['email' => 'Email and password required']);
         }
+
+        // Sanitize email
+        $email = strtolower(trim($input['email']));
+        $password = $input['password'];
         
         // Authenticate
-        $result = AuthMiddleware::authenticate($input['email'], $input['password']);
+        $result = AuthMiddleware::authenticate($email, $password);
         
         if (!$result['success']) {
             Response::error($result['message'], 401);

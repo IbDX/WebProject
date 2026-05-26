@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <script>
         (function () {
-            window.__API_BASE__ = '/index.php/api';
+            window.__API_BASE__ = '/WebProject/api';
             window.__CRUD_BASE__ = '/public/crud_handler.php';
             var key = 'theme';
             var dark = 'dark';
@@ -70,7 +70,7 @@
                             <span class="error-message" id="login-password-error"></span>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary btn-block">
+                        <button type="submit" id="login-submit-btn" class="btn btn-primary btn-block">
                             <span>Sign In</span>
                             <span class="loader" style="display: none;"></span>
                         </button>
@@ -162,13 +162,13 @@
                                 type="password" 
                                 id="reg-password" 
                                 name="password" 
-                                placeholder="Minimum 8 characters"
+                                placeholder="Letters and numbers only"
                                 required
                             >
                             <div class="password-strength" id="password-strength"></div>
                             <span class="error-message" id="reg-password-error"></span>
                             <small class="form-hint">
-                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
+                                Password must be at least 8 characters long and contain only letters and numbers.
                             </small>
                         </div>
                         
@@ -194,12 +194,13 @@
                             <label for="terms">I agree to the Terms of Service and Privacy Policy</label>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary btn-block">
+                        <button type="submit" id="register-submit-btn" class="btn btn-primary btn-block">
                             <span>Create Account</span>
                             <span class="loader" style="display: none;"></span>
                         </button>
                         
                         <div class="form-error" id="register-error" style="display: none;"></div>
+                        <div class="form-success" id="register-success" style="display: none;"></div>
                     </form>
                     
                     <div class="auth-footer">
@@ -590,11 +591,11 @@
     
     <!-- Scripts -->
     <script src="assets/js/theme.js"></script>
-    <script src="assets/js/utils.js?v=20260525-2"></script>
-    <script src="assets/js/validation.js"></script>
-    <script src="assets/js/api.js?v=20260525-2"></script>
-    <script src="assets/js/auth.js?v=20260525-2"></script>
-    <script src="assets/js/transactions.js?v=20260525-2"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/utils.js?v=20260526-1"></script>
+    <script src="assets/js/validation.js?v=20260526-1"></script>
+    <script src="assets/js/api.js?v=20260526-1"></script>
+    <script src="assets/js/auth.js?v=20260526-1"></script>
+    <script src="assets/js/transactions.js?v=20260526-1"></script>
+    <script src="assets/js/app.js?v=20260526-1"></script>
 </body>
 </html>

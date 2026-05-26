@@ -41,6 +41,12 @@ class FormValidator {
                             this.addError(fieldName, minimumMessage);
                         }
                         break;
+
+                    case 'passwordPolicy':
+                        if (value && !isPasswordPolicyValid(value)) {
+                            this.addError(fieldName, 'Password must be at least 8 characters long and contain only letters and numbers.');
+                        }
+                        break;
                         
                     case 'max':
                         if (value && value.length > parseInt(params[0])) {
@@ -65,6 +71,12 @@ class FormValidator {
                     case 'number':
                         if (value && isNaN(value)) {
                             this.addError(fieldName, `${this.formatFieldName(fieldName)} must be a number.`);
+                        }
+                        break;
+
+                    case 'terms':
+                        if (!input.checked) {
+                            this.addError(fieldName, 'You must agree to the Terms of Service to continue.');
                         }
                         break;
                 }
@@ -97,20 +109,22 @@ class FormValidator {
     }
 }
 
-// Real-time password strength display
-function setupPasswordStrengthMeter(inputId, meterId) {
+// Real-time password policy display
+function setupPasswordPolicyMeter(inputId, meterId) {
     const input = document.getElementById(inputId);
     const meter = document.getElementById(meterId);
     
     if (!input || !meter) return;
     
+    const policyMessage = 'Password must be at least 8 characters long and contain only letters and numbers.';
+
     input.addEventListener('input', function() {
-        const strength = getPasswordStrength(this.value);
-        const label = getPasswordStrengthLabel(strength);
-        const color = getPasswordStrengthColor(strength);
-        
-        meter.textContent = `Password Strength: ${label}`;
-        meter.style.color = color;
+        const isValid = isPasswordPolicyValid(this.value);
+
+        meter.textContent = this.value
+            ? (isValid ? 'Password meets requirements.' : policyMessage)
+            : '';
+        meter.style.color = isValid ? '#2e7d32' : '#d32f2f';
         meter.style.display = this.value ? 'block' : 'none';
     });
 }

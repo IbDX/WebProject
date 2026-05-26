@@ -2,6 +2,9 @@
  * Authentication Handlers
  */
 
+// Track submission state to prevent race conditions
+let _isSubmitting = false;
+
 // Initialize auth page
 function initAuthPage() {
     if (isLoggedIn()) {
@@ -22,6 +25,9 @@ function setupLoginForm() {
     
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // Prevent double-submit
+        if (_isSubmitting) return;
         
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
@@ -37,6 +43,8 @@ function setupLoginForm() {
         
         clearFormErrors('login-form');
         const submitBtn = form.querySelector('button[type="submit"]');
+        _isSubmitting = true;
+        disableSubmitButton(submitBtn);
         showLoader(submitBtn);
         
         try {
@@ -55,11 +63,15 @@ function setupLoginForm() {
                     loadDashboard();
                 }, 500);
             } else {
+                showFormError('login-error', response.message || 'Invalid email or password');
                 showToast(response.message || 'Login failed', 'error');
             }
         } catch (error) {
+            showFormError('login-error', 'Login error: ' + error.message);
             showToast('Login error: ' + error.message, 'error');
         } finally {
+            _isSubmitting = false;
+            enableSubmitButton(submitBtn);
             hideLoader(submitBtn);
         }
     });
@@ -70,20 +82,25 @@ function setupRegisterForm() {
     const form = document.getElementById('register-form');
     if (!form) return;
     
-    // Setup password strength meter
-    setupPasswordStrengthMeter('reg-password', 'password-strength');
+    // Setup password policy meter
+    setupPasswordPolicyMeter('reg-password', 'password-strength');
     
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // Prevent double-submit
+        if (_isSubmitting) return;
         
+        // Client-side validation
         const validator = new FormValidator('register-form');
         if (!validator.validate({
             'first_name': ['required'],
             'last_name': ['required'],
             'email': ['required', 'email'],
             'date_of_birth': ['required'],
-            'password': ['required', 'min:8'],
-            'password_confirm': ['required', 'match:password']
+            'password': ['required', 'passwordPolicy'],
+            'password_confirm': ['required', 'match:password'],
+            'terms': ['terms']
         })) {
             validator.displayErrors();
             return;
@@ -91,35 +108,85 @@ function setupRegisterForm() {
         
         clearFormErrors('register-form');
         const submitBtn = form.querySelector('button[type="submit"]');
+        _isSubmitting = true;
+        disableSubmitButton(submitBtn);
         showLoader(submitBtn);
         
         try {
             const formData = new FormData(form);
             const userData = Object.fromEntries(formData);
+            // Remove fields the backend doesn't need
+            delete userData.terms;
             
             const response = await API.register(userData);
             
             if (response.success) {
-                showToast('Registration successful! Redirecting to login...', 'success');
+                // Show success message
+                showRegistrationSuccess(form);
                 form.reset();
                 
+                // Redirect to login after showing success
                 setTimeout(() => {
+                    hideRegistrationSuccess();
                     switchView('login');
-                    document.getElementById('login-email').focus();
-                }, 1500);
+                    // Pre-fill email if we have it
+                    const loginEmail = document.getElementById('login-email');
+                    if (loginEmail && userData.email) {
+                        loginEmail.value = userData.email;
+                        loginEmail.focus();
+                    }
+                }, 2000);
             } else {
-                if (response.errors) {
+                // Display server validation errors on the correct fields
+                if (response.errors && Object.keys(response.errors).length > 0) {
                     displayFormErrors(response.errors, 'register-form');
-                } else {
-                    showToast(response.message || 'Registration failed', 'error');
                 }
+
+                // Show the general form error banner
+                const msg = response.message || 'Registration failed';
+                showFormError('register-error', msg);
+                showToast(msg, 'error');
             }
         } catch (error) {
+            showFormError('register-error', 'Registration error: ' + error.message);
             showToast('Registration error: ' + error.message, 'error');
         } finally {
+            _isSubmitting = false;
+            enableSubmitButton(submitBtn);
             hideLoader(submitBtn);
         }
     });
+}
+
+// Show inline form error
+function showFormError(elementId, message) {
+    const el = document.getElementById(elementId);
+    if (el) {
+        el.textContent = message;
+        el.style.display = 'block';
+    }
+}
+
+// Show registration success banner
+function showRegistrationSuccess(form) {
+    let banner = document.getElementById('register-success');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'register-success';
+        banner.className = 'form-success';
+        banner.style.cssText = 'margin-top: 1rem; padding: 1rem; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 0.5rem; color: #2e7d32; text-align: center; font-weight: 600; animation: fadeUp 320ms ease both;';
+        form.parentNode.insertBefore(banner, form.nextSibling);
+    }
+    banner.textContent = '✓ Account created successfully! Redirecting to login...';
+    banner.style.display = 'block';
+
+    showToast('Registration successful! Redirecting to login...', 'success');
+}
+
+// Hide registration success banner
+function hideRegistrationSuccess() {
+    const banner = document.getElementById('register-success');
+    if (banner) banner.style.display = 'none';
 }
 
 // Logout

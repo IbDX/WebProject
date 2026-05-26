@@ -43,8 +43,8 @@ public static function verifyPassword($password, $hash) {
     return password_verify($password, $hash);
 }
 
-public static function validatePasswordStrength($password) {
-    // Returns true if password meets all requirements
+public static function validatePasswordPolicy($password) {
+    // Returns true if password is at least 8 characters long and alphanumeric only
 }
 ```
 
@@ -236,7 +236,7 @@ public static function sanitizeFloat($value) {
 ```javascript
 // assets/js/validation.js
 - Real-time feedback
-- Password strength meter
+- Password policy indicator
 - Email format validation
 - Phone number formatting
 - Amount decimal validation

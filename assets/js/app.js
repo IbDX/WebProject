@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 type="password" 
                                 id="current-password" 
                                 name="current_password" 
-                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
+                                placeholder="Enter current password"
                             >
                         </div>
                         
@@ -47,11 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                 type="password" 
                                 id="new-password" 
                                 name="new_password" 
+                                placeholder="Letters and numbers only"
                                 required
                             >
                             <div class="password-strength" id="change-password-strength"></div>
                             <small class="form-hint">
-                                Use at least 8 characters. Mixing uppercase, lowercase, and numbers will make it stronger.
+                                Password must be at least 8 characters long and contain only letters and numbers.
                             </small>
                         </div>
                         
@@ -84,7 +85,7 @@ function setupChangePasswordForm() {
     const form = document.getElementById('change-password-form');
     if (!form) return;
     
-    setupPasswordStrengthMeter('new-password', 'change-password-strength');
+    setupPasswordPolicyMeter('new-password', 'change-password-strength');
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -92,7 +93,7 @@ function setupChangePasswordForm() {
         const validator = new FormValidator('change-password-form');
         if (!validator.validate({
             'current_password': ['required'],
-            'new_password': ['required', 'min:8'],
+            'new_password': ['required', 'passwordPolicy'],
             'confirm_password': ['required', 'match:new_password']
         })) {
             validator.displayErrors();

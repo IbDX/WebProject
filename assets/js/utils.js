@@ -123,17 +123,35 @@ function clearFormErrors(formId) {
     }
 }
 
-// Display form errors
+// Display form errors — resolves field names to error-span IDs
+// Supports both "formId-field-error" and "prefix-field-error" patterns
 function displayFormErrors(errors, formId) {
     const form = document.getElementById(formId);
     if (!form) return;
     
     clearFormErrors(formId);
+
+    // Build a lookup of all error-message spans inside the form by their id
+    const errorSpans = {};
+    form.querySelectorAll('.error-message[id]').forEach(el => {
+        errorSpans[el.id] = el;
+    });
     
     for (const [field, messages] of Object.entries(errors)) {
-        const errorEl = document.getElementById(`${formId}-${field.replace(/_/g, '-')}-error`);
-        if (errorEl && messages.length > 0) {
-            errorEl.textContent = messages[0];
+        const normalizedField = field.replace(/_/g, '-').toLowerCase();
+        // Try multiple ID conventions: formId-field-error, reg-field-error, login-field-error, field-error
+        const candidates = [
+            `${formId}-${normalizedField}-error`,
+            `reg-${normalizedField}-error`,
+            `login-${normalizedField}-error`,
+            `${normalizedField}-error`
+        ];
+        const msgArray = Array.isArray(messages) ? messages : [messages];
+        for (const candidateId of candidates) {
+            if (errorSpans[candidateId] && msgArray.length > 0) {
+                errorSpans[candidateId].textContent = msgArray[0];
+                break;
+            }
         }
     }
 
@@ -209,35 +227,22 @@ function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Validate password strength
-function getPasswordStrength(password) {
-    let strength = 2;
-    
-    if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    
-    
-    return strength;
+// Validate simplified password policy
+function isPasswordPolicyValid(password) {
+    return /^[A-Za-z0-9]{8,}$/.test(password);
 }
 
-// Get password strength label
-function getPasswordStrengthLabel(strength) {
-    if (strength < 2) return 'Weak';
-    if (strength < 3) return 'Fair';
-    if (strength < 4) return 'Good';
-    if (strength < 5) return 'Strong';
-    return 'Very Strong';
+// Disable a submit button to prevent double-submit
+function disableSubmitButton(btn) {
+    if (!btn) return;
+    btn.disabled = true;
+    btn.dataset.originalText = btn.querySelector('span')?.textContent || btn.textContent;
 }
 
-// Get password strength color
-function getPasswordStrengthColor(strength) {
-    if (strength < 2) return '#d32f2f';
-    if (strength < 3) return '#f57c00';
-    if (strength < 4) return '#fbc02d';
-    if (strength < 5) return '#689f38';
-    return '#388e3c';
+// Re-enable a submit button
+function enableSubmitButton(btn) {
+    if (!btn) return;
+    btn.disabled = false;
 }
 
 // Mask account number
